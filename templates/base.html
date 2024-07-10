@@ -176,10 +176,87 @@ p{
   
 </body>
 
-<script>
+<script type="module">
+
+
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-analytics.js";
+  import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-messaging.js";
+
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBeA5Vt0Lc5Hbe0i_dXJSLWLiG0FGq0s44",
+    authDomain: "leaksgram-4cc3b.firebaseapp.com",
+    projectId: "leaksgram-4cc3b",
+    storageBucket: "leaksgram-4cc3b.appspot.com",
+    messagingSenderId: "1003081775172",
+    appId: "1:1003081775172:web:c58c7f451b2a2327c4a411",
+    measurementId: "G-P6DEK2T2MV"
+  };
+
+ 
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
 
 
 
+const messaging = getMessaging(app);
+
+
+Notification.requestPermission()
+  .then((permission) => {
+    if (permission === 'granted') {
+      console.log('Notification permission granted.');
+      // Get registration token
+      return getToken(messaging, { vapidKey: 'BAjeBGswLDNGw0Wi_xzhoW7j3mphOr2sCydvgYCuTCeIQ-V3VyrletqyxUoDdaWxxUaI1KEz_zX3lIx_HcVfxhs' });
+    } else {
+      console.error('Unable to get permission to notify.');
+    }
+  })
+  .then((token) => {
+    if (token) {
+      console.log('Token:', token);
+      alert(token)
+      saveToken(token);
+    }
+  })
+  .catch((err) => {
+    console.error('An error occurred while retrieving token. ', err);
+  });
+
+// Handle incoming messages
+onMessage(messaging, (payload) => {
+  console.log('Message received. ', payload);
+  // Display notification here
+});
+
+function saveToken(token) {
+  // Send token to server
+  fetch('/save-token/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': getCookie('csrftoken') // Django CSRF token
+    },
+    body: JSON.stringify({ token: token })
+  });
+}
+
+// Helper function to get CSRF token
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
 
 
 
