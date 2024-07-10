@@ -34,14 +34,12 @@ def firebase_messaging_sw(request):
       const notificationTitle = payload.notification.title;
       const notificationOptions = {{
         body: payload.notification.body,
-        icon: '/firebase-logo.png'
+        icon: 'https://api.dicebear.com/9.x/adventurer/svg?seed=Buddy'
       }};
 
       self.registration.showNotification(notificationTitle, notificationOptions);
     }});
     """
-
-    # Return as JavaScript content
     response = HttpResponse(script_content, content_type='application/javascript')
     return response
 
