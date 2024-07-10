@@ -3,7 +3,7 @@ from django.http import HttpResponse
 
 def firebase_messaging_sw(request):
  
-    #firebase_config =  
+
 
 
 
