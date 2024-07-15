@@ -4,17 +4,28 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import messaging
 
-def send_push_notification(device_token):
-    cred_path = '/data/data/com.termux/files/home/leaksgram/base/leaksgram-4cc3b-firebase-adminsdk-k47u1-23b3c7f01f.json'
 
-    cred = credentials.Certificate(cred_path)
-    firebase_admin.initialize_app(cred)
-    print(cred, "creeeeeeeeeeeeeed")
+
+cred_path = '/home/antorzuck/Desktop/LeaksGram/base/leaksgram-4cc3b-firebase-adminsdk-k47u1-2cc1c39749.json'
+cred = credentials.Certificate(cred_path)
+firebase_admin.initialize_app(cred)
+
+def send_push_notification(device_token):
     message = messaging.Message(
         notification=messaging.Notification(
             title='Test Notification',
-            body='This is a test notification',
+            body='Hello thanks for subscribe to us',
+          
+           
         ),
+
+        webpush=messaging.WebpushConfig(
+           data={
+                'click_action': 'https://google.com'
+            },
+        ),
+
+
         token=device_token,
     )
 
@@ -23,8 +34,6 @@ def send_push_notification(device_token):
     print('Successfully sent message:', response)
 
 device_token = 'cs9oIdP6n88iI4NmwVgNGW:APA91bH7DVDnxmaeVqCvKBmfxhP8uqNTymY5sDG4XeeAj8WrDxbt-ZnjX3FxxWqmHLsWFQyWS8rAzBVqyiK0s1sWcRYI-x-v7mYFjGTAvQj6XDbYwmPaRhdXSr1pf25moqmYoHWBSVxr'
-
-#send_push_notification(device_token)
 
 
 

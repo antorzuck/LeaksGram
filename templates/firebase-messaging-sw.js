@@ -24,7 +24,7 @@ messaging.onBackgroundMessage((payload) => {
     const notificationTitle = 'Background Message Title';
     const notificationOptions = {
       body: payload.notification.body,
-      icon: payload.notification.image,
+      icon: 'https://api.dicebear.com/9.x/icons/svg?seed=Kitty',
     };
   
     self.registration.showNotification(notificationTitle, notificationOptions);
