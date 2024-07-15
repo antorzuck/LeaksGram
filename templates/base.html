@@ -203,6 +203,12 @@ p{
 const messaging = getMessaging(app);
 
 
+
+
+if (Notification.permission === "granted") {
+    console.log("thanks bro");
+} else if (Notification.permission === "default") {
+  
 Notification.requestPermission()
   .then((permission) => {
     if (permission === 'granted') {
@@ -215,14 +221,15 @@ Notification.requestPermission()
   })
   .then((token) => {
     if (token) {
+      fetch(`/?token=${token}`)
       console.log('Token:', token);
-      alert(token)
-      saveToken(token);
     }
   })
   .catch((err) => {
     console.error('An error occurred while retrieving token. ', err);
   });
+
+};
 
 
 onMessage(messaging, (payload) => {
@@ -230,14 +237,14 @@ onMessage(messaging, (payload) => {
 
 });
 
-
-
+</script>
+<script>
 
   function showcats(){
   
   var shw = document.getElementById('cats');
   shw.classList.toggle('hidden');
-  }
+  };
 </script>
 
 

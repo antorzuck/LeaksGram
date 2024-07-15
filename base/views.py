@@ -1,51 +1,37 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import messaging
 
-def firebase_messaging_sw(request):
+def send_push_notification(device_token):
+    cred_path = '/data/data/com.termux/files/home/leaksgram/base/leaksgram-4cc3b-firebase-adminsdk-k47u1-23b3c7f01f.json'
+
+    cred = credentials.Certificate(cred_path)
+    firebase_admin.initialize_app(cred)
+    print(cred, "creeeeeeeeeeeeeed")
+    message = messaging.Message(
+        notification=messaging.Notification(
+            title='Test Notification',
+            body='This is a test notification',
+        ),
+        token=device_token,
+    )
+
  
+    response = messaging.send(message)
+    print('Successfully sent message:', response)
 
+device_token = 'cs9oIdP6n88iI4NmwVgNGW:APA91bH7DVDnxmaeVqCvKBmfxhP8uqNTymY5sDG4XeeAj8WrDxbt-ZnjX3FxxWqmHLsWFQyWS8rAzBVqyiK0s1sWcRYI-x-v7mYFjGTAvQj6XDbYwmPaRhdXSr1pf25moqmYoHWBSVxr'
 
-
-
-    script_content = """
-    importScripts('https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js');
-    importScripts('https://www.gstatic.com/firebasejs/10.12.3/firebase-messaging.js');
-
-
-    const firebaseConfig = {
-    apiKey: "AIzaSyBeA5Vt0Lc5Hbe0i_dXJSLWLiG0FGq0s44",
-    authDomain: "leaksgram-4cc3b.firebaseapp.com",
-    projectId: "leaksgram-4cc3b",
-    storageBucket: "leaksgram-4cc3b.appspot.com",
-    messagingSenderId: "1003081775172",
-    appId: "1:1003081775172:web:c58c7f451b2a2327c4a411",
-    measurementId: "G-P6DEK2T2MV"
-  };
-
-    firebase.initializeApp(firebaseConfig);
-
-
-    const messaging = firebase.messaging();
-
-    messaging.onBackgroundMessage(function(payload) {{
-      console.log('Received background message ', payload);
-
-   
-      const notificationTitle = payload.notification.title;
-      const notificationOptions = {{
-        body: payload.notification.body,
-        icon: 'https://api.dicebear.com/9.x/adventurer/svg?seed=Buddy'
-      }};
-
-      self.registration.showNotification(notificationTitle, notificationOptions);
-    }});
-    """
-    response = HttpResponse(script_content, content_type='application/javascript')
-    return response
+#send_push_notification(device_token)
 
 
 
 def home(request):
+    token = request.GET.get('token')
+    print(token)
+    send_push_notification(device_token)
     return render(request, 'home.html')
 
 
